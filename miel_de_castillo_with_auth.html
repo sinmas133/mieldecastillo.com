@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Miel de Castillo | Artesana y de Proximidad</title>
+  <meta name="description" content="Miel de Castillo: mieles artesanas de naranjo, romero, tomillo, lavanda y más. Calidad de apicultor con envío local." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --honey:#f7b500; --honey-600:#e19a00; --honey-700:#c48200;
+      --choco:#3b2c23; --cream:#fff8e6; --paper:#fcf4db; --ink:#2a201a; --accent:#8a5a2b;
+      --radius:18px; --shadow:0 10px 30px rgba(58,36,17,.18);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    img{max-width:100%;display:block}
+
+    /* Header */
+    .header{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,#fff,rgba(255,255,255,.9));backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid rgba(0,0,0,.06)}
+    .nav{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:18px;padding:10px 20px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+    .brand img{width:54px;height:54px;object-fit:cover;border-radius:12px;box-shadow:var(--shadow)}
+    .brand h1{font:700 22px/1.1 "Playfair Display",serif;letter-spacing:.4px;margin:0}
+    .brand small{display:block;font:600 11px Inter;color:var(--accent);opacity:.9}
+
+    .menu{margin-left:auto;display:flex;align-items:center;gap:8px}
+    .menu > li{list-style:none;position:relative}
+    .menu > li > a, .menu > li > button{appearance:none;border:0;background:transparent;cursor:pointer;padding:10px 14px;border-radius:12px;font-weight:600;color:var(--ink)}
+    .menu > li > a:hover, .menu > li > button:hover{background:rgba(0,0,0,.05)}
+
+    /* Cart button */
+    .cartBtn{position:relative}
+    .cartCount{position:absolute;top:4px;right:2px;background:var(--honey);border-radius:999px;font-weight:800;padding:0 6px;font-size:12px}
+
+    /* Dropdown */
+    .dropdown{position:absolute;left:0;top:48px;min-width:230px;background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:16px;box-shadow:var(--shadow);padding:8px;opacity:0;pointer-events:none;transform:translateY(6px);transition:.2s}
+    .menu > li:hover .dropdown{opacity:1;pointer-events:auto;transform:translateY(0)}
+    .dropdown a{display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:12px;text-decoration:none;color:var(--ink);font-weight:600}
+    .dropdown a:hover{background:var(--paper)}
+    .badge{background:var(--honey);color:#221b14;font-weight:800;padding:2px 8px;border-radius:999px;font-size:12px}
+
+    /* Hero */
+    .hero{max-width:1100px;margin:28px auto 0;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;padding:0 20px 32px}
+    .heroCard{background:linear-gradient(160deg,var(--paper),#fff);border:1px solid rgba(0,0,0,.06);border-radius:24px;box-shadow:var(--shadow);padding:28px}
+    .hero h2{font:700 42px/1.1 "Playfair Display",serif;margin:6px 0 14px;color:var(--choco)}
+    .hero p{margin:0 0 18px}
+    .cta{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:0;font-weight:700;cursor:pointer;text-decoration:none}
+    .btn-primary{background:linear-gradient(180deg,var(--honey),var(--honey-600));color:#221b14}
+    .btn-primary:hover{filter:brightness(.98)}
+    .btn-soft{background:#fff;border:1px solid rgba(0,0,0,.08);color:var(--ink)}
+
+    .stamp{background:#fff;border:1px dashed #d0b07a;border-radius:20px;padding:14px;text-align:center}
+    .stamp b{color:var(--honey-700)}
+
+    /* Sections */
+    .section{max-width:1100px;margin:38px auto;padding:0 20px}
+    .section h3{font:700 28px "Playfair Display",serif;margin:0 0 6px;color:var(--choco)}
+    .lead{margin:0 0 14px;color:#6d5a4b}
+
+    /* Products */
+    .filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+    .chip{border:1px solid rgba(0,0,0,.08);background:#fff;padding:8px 10px;border-radius:999px;font-weight:600;cursor:pointer}
+    .chip.active{background:var(--honey);}
+
+    .grid{display:grid;grid-template-columns:repeat(1,minmax(0,1fr));gap:16px}
+    @media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:960px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+    .card{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .thumb{height:180px;background:radial-gradient(60% 60% at 50% 40%, #ffe59a, #f7b500);display:flex;align-items:center;justify-content:center}
+    .thumb .jar{width:92px;height:120px;border-radius:16px;background:linear-gradient(180deg,var(--honey),var(--honey-600));box-shadow:inset 0 8px 20px rgba(0,0,0,.08), 0 12px 24px rgba(0,0,0,.12)}
+    .content{padding:16px;display:flex;flex-direction:column;gap:8px}
+    .title{font:800 18px Inter;color:var(--choco)}
+    .desc{color:#6a5a4c;min-height:44px}
+    .price{display:flex;gap:10px;align-items:baseline;font-weight:800}
+    .price small{font-weight:600;color:#7a6a5c}
+    .actions{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+
+    /* Product detail */
+    .detail{display:grid;grid-template-columns:1fr;gap:24px}
+    @media(min-width:900px){.detail{grid-template-columns:1fr 1fr}}
+    .detailHero{background:#fff;border:1px solid rgba(0,0,0,.06);border-radius:24px;box-shadow:var(--shadow);padding:22px}
+
+    /* Contact */
+    .contact{display:grid;grid-template-columns:1fr;gap:24px}
+    @media(min-width:880px){.contact{grid-template-columns:1.2fr .8fr}}
+    form{background:#fff;border:1px solid rgba(0,0,0,.06);padding:18px;border-radius:18px;box-shadow:var(--shadow)}
+    label{display:block;font-weight:700;margin:8px 0 6px}
+    input, textarea, select{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(0,0,0,.12);font:inherit}
+    textarea{min-height:120px;resize:vertical}
+
+    /* Cart drawer */
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:360px;max-width:95vw;background:#fff;border-left:1px solid rgba(0,0,0,.1);box-shadow:var(--shadow);transform:translateX(100%);transition:.25s;z-index:80;display:flex;flex-direction:column}
+    .drawer.open{transform:none}
+    .drawer header{padding:14px 16px;border-bottom:1px solid rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center}
+    .drawer main{padding:14px 16px;overflow:auto;flex:1}
+    .drawer footer{padding:14px 16px;border-top:1px solid rgba(0,0,0,.08);background:#fafafa}
+    .line{display:flex;gap:10px;align-items:center;justify-content:space-between;border-bottom:1px dashed rgba(0,0,0,.08);padding:10px 0}
+    .qty{display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,.12);border-radius:12px;overflow:hidden}
+    .qty button{background:#fff;border:0;width:32px;height:32px;font-weight:900}
+    .qty input{width:44px;text-align:center;border:0}
+
+    /* Modal de autenticación */
+    .modalAuth {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modalContent {
+      background: #fff;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+      width: 320px;
+      animation: fadeIn .25s ease;
+      position: relative;
+    }
+    .closeBtn {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: transparent;
+      border: 0;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--choco);
+    }
+    .modalContent h3 {
+      text-align: center;
+      font-family: "Playfair Display", serif;
+      color: var(--choco);
+      margin: 0 0 14px;
+    }
+    .modalContent form label {
+      font-weight: 600;
+      display: block;
+      margin-top: 8px;
+    }
+    .modalContent form input {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,.12);
+      border-radius: 10px;
+      padding: 10px;
+      font: inherit;
+      margin-top: 4px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(.96); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Footer small */
+    footer .foot{max-width:1100px;margin:28px auto;padding:0 20px;color:#6d5a4b}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <nav class="nav">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio">
+        <img src="ChatGPT Image 21 abr 2025, 22_34_47.png" alt="Logo Miel" />
+        <div>
+          <h1>Miel de Castillo</h1>
+          <small>Artesana · Local · Pura</small>
+        </div>
+      </a>
+      <ul class="menu">
+        <li><a href="#inicio">Inicio</a></li>
+        <li><a href="#informacion">Información</a></li>
+        <li>
+          <button type="button" aria-haspopup="true" aria-expanded="false">Mieles ▾</button>
+          <div class="dropdown" id="dropdown-mieles"><!-- items inyectados por JS --></div>
+        </li>
+        <li><a href="#contacto">Contáctanos</a></li>
+        <li>
+          <button class="btn btn-soft cartBtn" id="openCart">Carrito <span class="cartCount" id="cartCount">0</span></button>
+        </li>
+        <li><button class="btn btn-soft" onclick="openAuth()">Acceder</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section id="inicio" class="hero">
+    <div class="heroCard">
+      <span class="badge">100% Pura</span>
+      <h2>Sabores auténticos, <br/>directo de la naturaleza</h2>
+      <p>En <b>Miel de Castillo</b> seleccionamos y elaboramos mieles monoflorales y de montaña con procesos artesanos, cuidando las abejas y el entorno.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#mieles">Ver nuestras mieles</a>
+        <a class="btn btn-soft" href="#informacion">Conócenos</a>
+      </div>
+    </div>
+    <div class="stamp">
+      <img src="ChatGPT Image 21 abr 2025, 22_34_47.png" alt="Sello Miel de Castillo" style="width:140px;margin:0 auto 8px;border-radius:20px"/>
+      <div>Calidad <b>Artesana</b> desde la colmena<br/>Envasado responsable y de proximidad.</div>
+    </div>
+  </section>
+
+  <!-- Información -->
+  <section id="informacion" class="section">
+    <h3>Nuestra historia</h3>
+    <p class="lead">Miel de Castillo es un proyecto familiar artesanal nacido junto al castillo de Alcalatén, en l’Alcora. El padre, con raíces en Rumanía y experiencia en apicultura, cuida las colmenas y la producción. El hijo participa en la recolección, el diseño, las etiquetas y la gestión digital. Juntos elaboran miel natural con dedicación, tradición y cariño.</p>
+  </section>
+
+  <!-- Listado Mieles / Productos -->
+  <section id="mieles" class="section">
+    <h3>Nuestras mieles</h3>
+    <p class="lead">Elige por variedad o según lo que te apetezca hoy. Precios orientativos; personalízalos fácilmente en el código.</p>
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="productos"></div>
+  </section>
+
+  <!-- Detalle de producto (router mostrará/ocultará) -->
+  <section id="detalle" class="section" style="display:none"></section>
+
+  <!-- Contacto -->
+  <section id="contacto" class="section">
+    <h3>Contáctanos</h3>
+    <p class="lead">¿Tienes un pedido, eres tienda o quieres saber en qué mercados estaremos? Escríbenos.</p>
+    <div class="contact">
+      <form id="formContacto">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" name="nombre" required placeholder="Tu nombre" />
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required placeholder="tucorreo@ejemplo.com" />
+        <label for="mensaje">Mensaje</label>
+        <textarea id="mensaje" name="mensaje" required placeholder="Cuéntanos qué necesitas"></textarea>
+        <div class="cta">
+          <button class="btn btn-primary" type="submit">Enviar</button>
+          <a class="btn btn-soft" href="tel:+34900123456">Llamar</a>
+        </div>
+      </form>
+      <div>
+        <div class="heroCard">
+          <h4 style="margin:0 0 8px;font:700 22px 'Playfair Display',serif;color:var(--choco)">Datos de contacto</h4>
+          <p style="margin:0 0 6px"><b>Email:</b> <a href="mailto:mieldecastillo@gmail.com">mieldecastillo@gmail.com</a></p>
+          <p style="margin:0 0 6px"><b>Teléfono:</b> <a href="tel:+34622161503">+34 622 161 503</a></p>
+          <p style="margin:0">Envíos locales y recogida</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="foot">
+      © <span id="year"></span> Miel de Castillo
+    </div>
+  </footer>
+
+  <!-- Drawer del carrito -->
+  <aside class="drawer" id="cartDrawer" aria-hidden="true" aria-label="Carrito de compra">
+    <header>
+      <strong>Tu carrito</strong>
+      <button class="btn btn-soft" id="closeCart">Cerrar</button>
+    </header>
+    <main id="cartLines"></main>
+    <footer>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <b>Total</b>
+        <b id="cartTotal">0,00 €</b>
+      </div>
+      <div class="cta">
+        <button class="btn btn-primary" id="checkoutBtn">Enviar pedido</button>
+        <button class="btn btn-soft" id="clearCart">Vaciar</button>
+      </div>
+    </footer>
+  </aside>
+
+  <!-- Modal de autenticación -->
+  <div id="modalAuth" class="modalAuth" aria-hidden="true">
+    <div class="modalContent">
+      <button class="closeBtn" onclick="closeAuth()">×</button>
+      <h3 id="authTitle">Iniciar sesión</h3>
+
+      <form id="loginForm">
+        <label>Email</label>
+        <input type="email" id="loginEmail" placeholder="tuemail@ejemplo.com" required>
+        <label>Contraseña</label>
+        <input type="password" id="loginPass" placeholder="••••••••" required>
+        <div style="margin-top:12px">
+          <button type="submit" class="btn btn-primary" style="width:100%">Entrar</button>
+        </div>
+        <p style="margin-top:10px;text-align:center">¿No tienes cuenta? <a href="#" onclick="showRegister();return false;">Regístrate</a></p>
+      </form>
+
+      <form id="registerForm" style="display:none">
+        <label>Nombre</label>
+        <input type="text" id="regNombre" required>
+        <label>Email</label>
+        <input type="email" id="regEmail" required>
+        <label>Contraseña</label>
+        <input type="password" id="regPass" required>
+        <div style="margin-top:12px">
+          <button type="submit" class="btn btn-primary" style="width:100%">Crear cuenta</button>
+        </div>
+        <p style="margin-top:10px;text-align:center">¿Ya tienes cuenta? <a href="#" onclick="showLogin();return false;">Inicia sesión</a></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ========== CONFIG ==========
+    // Reemplaza por la URL de despliegue de tu Apps Script
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_GoJJ83o1dVAW1DAxoKg7KzPhZsbDvWKhNoit_10hR4wljLJh-rF9_6FdtuO22qoI/exec";
+
+    // ======= Datos de productos =======
+    const PRODUCTOS = [
+      { id:'naranjo', nombre:'Miel de Naranjo (Azahar)', desc:'Suave, floral y ligeramente cítrica. Ideal para infusiones y postres.', precio500:6.5, precio1k:11.5 },
+      // Añade más productos aquí si quieres
+    ];
+
+    // ======= Utilidades =======
+    const euro = n => n.toLocaleString('es-ES',{ style:'currency', currency:'EUR'});
+    const $ = sel => document.querySelector(sel);
+
+    // ======= Dropdown y chips =======
+    const dd = document.getElementById('dropdown-mieles');
+    const filters = document.getElementById('filters');
+    PRODUCTOS.forEach(p => {
+      const a = document.createElement('a');
+      a.href = `#/miel/${p.id}`; a.dataset.filter = p.id; a.innerHTML = `${p.nombre} <span class=badge>desde ${euro(p.precio500)}</span>`;
+      dd.appendChild(a);
+      const chip = document.createElement('button');
+      chip.className='chip'; chip.textContent = p.nombre; chip.addEventListener('click', ()=>setFilter(p.id)); chip.dataset.filter=p.id;
+      filters.appendChild(chip);
+    });
+    const chipTodos = document.createElement('button');
+    chipTodos.className='chip active'; chipTodos.textContent='Todas las mieles'; chipTodos.addEventListener('click',()=>setFilter(''));
+    filters.prepend(chipTodos);
+
+    // ======= Render de cards (listado) =======
+    const cont = document.getElementById('productos');
+    function renderCards(lista){
+      cont.innerHTML = '';
+      lista.forEach(p => {
+        const card = document.createElement('article'); card.className='card';
+        card.innerHTML = `
+          <div class="thumb"><div class="jar" aria-hidden="true"></div></div>
+          <div class="content">
+            <div class="title">${p.nombre}</div>
+            <div class="desc">${p.desc}</div>
+            <div class="price"><span>${euro(p.precio1k)}</span> <small>/ 1 kg</small></div>
+            <div class="actions">
+              <button class="btn btn-primary" onclick="addToCart('${p.id}','1kg')">Añadir 1 kg</button>
+              <a class="btn btn-soft" href="#/miel/${p.id}">Ver detalle</a>
+            </div>
+          </div>`;
+        cont.appendChild(card);
+      });
+    }
+
+    function setFilter(id){
+      document.querySelectorAll('.chip').forEach(ch=>{
+        ch.classList.toggle('active', !id ? ch===chipTodos : ch.dataset.filter===id);
+      });
+      const lista = id ? PRODUCTOS.filter(p=>p.id===id) : PRODUCTOS;
+      renderCards(lista);
+      location.hash = '#mieles';
+    }
+
+    // ======= Detalle de producto =======
+    function renderDetail(p){
+      const s = document.getElementById('detalle');
+      s.style.display='block';
+      document.getElementById('mieles').style.display='none';
+      s.innerHTML = `
+        <div class="detail">
+          <div class="detailHero">
+            <div class="thumb" style="height:260px"><div class="jar"></div></div>
+            <div class="price" style="margin-top:12px"><span>${euro(p.precio500)}</span> <small>/ 500 g</small> · <span>${euro(p.precio1k)}</span> <small>/ 1 kg</small></div>
+            <div class="actions" style="margin-top:10px">
+              <button class="btn btn-primary" onclick="addToCart('${p.id}','500g')">Añadir 500 g</button>
+              <button class="btn btn-primary" onclick="addToCart('${p.id}','1kg')">Añadir 1 kg</button>
+            </div>
+          </div>
+          <div>
+            <h3 style="margin-top:0">${p.nombre}</h3>
+            <p class="lead">${p.desc}</p>
+            <p>Recolección y envasado en frío para preservar aromas y propiedades. Cosechas de temporada, sin mezclas.</p>
+            <div class="cta">
+              <a class="btn btn-soft" href="#mieles" onclick="showList();return false;">← Volver</a>
+            </div>
+          </div>
+        </div>`;
+    }
+    function showList(){
+      document.getElementById('detalle').style.display='none';
+      document.getElementById('mieles').style.display='block';
+    }
+
+    // ======= Router por hash =======
+    function router(){
+      const h = location.hash;
+      if(h.startsWith('#/miel/')){
+        const id = h.split('/')[2];
+        const p = PRODUCTOS.find(x=>x.id===id);
+        if(p){ renderDetail(p); }
+      } else {
+        showList();
+      }
+    }
+    window.addEventListener('hashchange', router);
+
+    // ======= Carrito en localStorage =======
+    const CART_KEY = 'miel_castillo_cart_v1';
+    const loadCart = () => JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    const saveCart = cart => { localStorage.setItem(CART_KEY, JSON.stringify(cart)); updateCartUI(); };
+
+    function addToCart(id, formato){
+      const p = PRODUCTOS.find(x=>x.id===id); if(!p) return;
+      const precio = formato==='1kg' ? p.precio1k : p.precio500;
+      const cart = loadCart();
+      const key = id+':'+formato;
+      const found = cart.find(i=>i.key===key);
+      if(found){ found.qty += 1; } else { cart.push({ key, id, nombre:p.nombre, formato, precio, qty:1 }); }
+      saveCart(cart);
+      openCart();
+    }
+
+    function updateCartUI(){
+      const cart = loadCart();
+      const count = cart.reduce((a,b)=>a+b.qty,0);
+      document.getElementById('cartCount').textContent = count;
+      const list = document.getElementById('cartLines');
+      list.innerHTML = '';
+      let total = 0;
+      cart.forEach(item=>{
+        total += item.precio * item.qty;
+        const line = document.createElement('div'); line.className='line';
+        line.innerHTML = `
+          <div>
+            <div style="font-weight:700">${item.nombre} · ${item.formato}</div>
+            <div style="opacity:.75">${euro(item.precio)} c/u</div>
+          </div>
+          <div class="qty">
+            <button onclick="decQty('${item.key}')">−</button>
+            <input value="${item.qty}" aria-label="Cantidad" readonly>
+            <button onclick="incQty('${item.key}')">+</button>
+          </div>`;
+        list.appendChild(line);
+      });
+      document.getElementById('cartTotal').textContent = euro(total);
+    }
+    function incQty(key){ const cart=loadCart(); const it=cart.find(i=>i.key===key); if(it){it.qty++; saveCart(cart);} }
+    function decQty(key){ const cart=loadCart(); const it=cart.find(i=>i.key===key); if(!it) return; it.qty--; if(it.qty<=0){cart.splice(cart.indexOf(it),1);} saveCart(cart); }
+
+    // Drawer carrito
+    const drawer = document.getElementById('cartDrawer');
+    const openCart = ()=>{ drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); };
+    const closeCart = ()=>{ drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); };
+    document.getElementById('openCart').addEventListener('click', openCart);
+    document.getElementById('closeCart').addEventListener('click', closeCart);
+
+    document.getElementById('clearCart').addEventListener('click', ()=>{ localStorage.removeItem(CART_KEY); updateCartUI(); });
+
+    // Checkout (envío al Apps Script)
+    document.getElementById('checkoutBtn').addEventListener('click', async ()=>{
+      const user = JSON.parse(localStorage.getItem('usuario'));
+      if (!user) {
+        openAuth();
+        return;
+      }
+
+      const cart = loadCart(); if(cart.length===0) return alert('Tu carrito está vacío.');
+      const total = cart.reduce((a,b)=>a+b.precio*b.qty,0);
+
+      // llamar al endpoint
+      try {
+        const payload = { action:'pedido', id_usuario:user.id_usuario, productos: cart.map(i=>({nombre:i.nombre, formato:i.formato, qty:i.qty, precio:i.precio})), total };
+        const res = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
+        const data = await res.json();
+        if (data.success) {
+          alert('Pedido registrado correctamente 🧾');
+          localStorage.removeItem(CART_KEY);
+          updateCartUI();
+          closeCart();
+        } else {
+          alert('Error al registrar el pedido: ' + (data.message || 'no disponible'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error de comunicación con el servidor. Revisa tu SCRIPT_URL o la configuración del Apps Script.');
+      }
+    });
+
+    // Año en footer y render inicial
+    document.getElementById('year').textContent = new Date().getFullYear();
+    renderCards(PRODUCTOS); updateCartUI(); router();
+
+    // Formulario mailto
+    document.getElementById('formContacto').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const nombre = document.getElementById('nombre').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const mensaje = document.getElementById('mensaje').value.trim();
+      const asunto = encodeURIComponent(`Consulta desde la web - ${nombre}`);
+      const cuerpo = encodeURIComponent(`${mensaje}\n\nNombre: ${nombre}\nEmail: ${email}`);
+      window.location.href = `mailto:mieldecastillo@gmail.com?subject=${asunto}&body=${cuerpo}`;
+    });
+
+    // ====== AUTENTICACIÓN (UI + conexión Apps Script) ======
+    function openAuth() {
+      document.getElementById('modalAuth').style.display = 'flex';
+      showLogin();
+      document.getElementById('modalAuth').setAttribute('aria-hidden','false');
+    }
+    function closeAuth() {
+      document.getElementById('modalAuth').style.display = 'none';
+      document.getElementById('modalAuth').setAttribute('aria-hidden','true');
+    }
+    function showRegister() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'block';
+      document.getElementById('authTitle').textContent = 'Crear cuenta';
+    }
+    function showLogin() {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('authTitle').textContent = 'Iniciar sesión';
+    }
+
+    // fetch hacia Apps Script
+    async function callScript(payload){
+      try {
+        const res = await fetch(SCRIPT_URL, { method:'POST', body: JSON.stringify(payload) });
+        return await res.json();
+      } catch (err) {
+        console.error('callScript error', err);
+        return { success:false, message:'No se pudo conectar con Apps Script' };
+      }
+    }
+
+    // Registro
+    document.getElementById('registerForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const nombre = document.getElementById('regNombre').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const pass = document.getElementById('regPass').value;
+      if(!nombre || !email || !pass) return alert('Rellena todos los campos.');
+      const res = await callScript({ action:'register', nombre, email, contraseña:pass });
+      if(res.success){
+        alert('Cuenta creada con éxito. Ahora puedes iniciar sesión.');
+        showLogin();
+      } else alert(res.message || 'Error al crear la cuenta');
+    });
+
+    // Login
+    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const pass = document.getElementById('loginPass').value;
+      if(!email || !pass) return alert('Rellena todos los campos.');
+      const res = await callScript({ action:'login', email, contraseña:pass });
+      if(res.success){
+        localStorage.setItem('usuario', JSON.stringify(res));
+        alert('Bienvenido, ' + (res.nombre || ''));
+        closeAuth();
+      } else alert(res.message || 'Usuario o contraseña incorrectos');
+    });
+  </script>
+</body>
+</html>
